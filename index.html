@@ -24,8 +24,60 @@ header{background:#305496;color:#fff;padding:4px 14px}
 .card{background:#fff;margin:14px 0;padding:14px;border-radius:10px;box-shadow:0 2px 10px #0001}
 button{padding:9px 14px;border:0;border-radius:7px;background:#1f4e78;color:#fff;font-weight:bold;cursor:pointer}
 button:disabled{opacity:.5;cursor:not-allowed}
-.tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
-.month-quick{display:flex;align-items:center;gap:6px;margin-left:4px}
+.tabs{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;align-items:center}
+.toolbar-row{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.toolbar-left{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.month-quick{display:flex;align-items:center;gap:6px;margin-left:0}
+.s7-date-quick{display:flex;align-items:center;gap:6px}
+.faktur-mode-toggle{display:none;align-items:center;gap:4px;margin-left:4px}
+.faktur-mode-toggle .fm-btn{
+  padding:5px 12px;font-size:11px;font-weight:700;border-radius:6px;border:1px solid #cbd5e1;
+  background:#e2e8f0;color:#334155;cursor:pointer;letter-spacing:.02em;
+}
+.faktur-mode-toggle .fm-btn.active{background:#1f4e78;border-color:#1f4e78;color:#fff}
+.faktur-cards{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;
+  max-height:68vh;overflow:auto;padding:2px 2px 8px;
+}
+.faktur-card{
+  background:linear-gradient(145deg,#fff 0%,#f0f6ff 100%);
+  border:1px solid #d6e0ee;border-radius:12px;padding:12px 14px;
+  box-shadow:0 2px 10px rgba(31,78,120,.07);display:flex;flex-direction:column;gap:8px;
+}
+.faktur-card .fc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.faktur-card .fc-faktur{font-size:13px;font-weight:800;color:#1f4e78;word-break:break-all;flex:1;min-width:0}
+.faktur-card .fc-head-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+.faktur-card .fc-tgl{font-size:11px;color:#64748b;font-weight:600;white-space:nowrap}
+.faktur-card .fc-meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:11px;color:#475569}
+.faktur-card .fc-meta b{color:#0f172a;font-weight:700}
+.faktur-card .fc-badge{
+  display:inline-block;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:800;
+  background:#e2e8f0;color:#334155;letter-spacing:.04em;text-transform:uppercase;
+  white-space:nowrap;
+}
+.faktur-card .fc-badge.cash{
+  background:#38bdf8;color:#0c4a6e;
+  box-shadow:0 0 0 1px rgba(56,189,248,.4),0 2px 6px rgba(56,189,248,.3);
+}
+.faktur-card .fc-badge.tempo{
+  background:#ea580c;color:#fff;
+  box-shadow:0 0 0 1px rgba(234,88,12,.35),0 2px 6px rgba(234,88,12,.25);
+}
+.faktur-card .fc-nums{display:flex;justify-content:space-between;gap:10px;padding-top:6px;border-top:1px dashed #d6e0ee}
+.faktur-card .fc-num-label{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.04em;font-weight:700}
+.faktur-card .fc-num-val{font-size:14px;font-weight:800;color:#0f172a}
+.faktur-card .fc-num-val.profit{color:#166534}
+.faktur-card .fc-items{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px}
+.faktur-card .fc-items li{
+  display:flex;justify-content:space-between;gap:8px;font-size:11px;color:#334155;
+  padding:4px 6px;background:#f8fafc;border-radius:6px;
+}
+.faktur-card .fc-items .fc-prod{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.faktur-card .fc-items .fc-qty{font-weight:700;color:#1f4e78;white-space:nowrap}
+.faktur-card .fc-items .fc-line{font-weight:600;color:#0f172a;white-space:nowrap}
+
+.s7-date-quick label{font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.04em}
+.s7-date-quick select{width:auto;min-width:140px;padding:6px 10px;border:1px solid #cbd5e1;border-radius:7px;font-size:12px;background:#fff;color:#172033}
 .month-quick label{font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.04em}
 .month-quick select{width:auto;min-width:150px;padding:6px 10px;border:1px solid #cbd5e1;border-radius:7px;font-size:12px;background:#fff;color:#172033}
 .month-quick .filter-btn{width:30px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;font-size:15px;border-radius:7px;position:relative}
@@ -57,7 +109,7 @@ tfoot td{background:#ffe699;font-weight:bold}
 .status{font-size:13px;margin-top:8px;color:#334155}
 .col-picker{position:relative;margin-left:0}
 .col-picker-btn{background:#e2e8f0;color:#334155;padding:6px 10px;font-size:12px;border-radius:6px}
-.col-picker-menu{display:none;position:absolute;right:0;top:calc(100% + 6px);background:#fff;border-radius:10px;box-shadow:0 8px 28px #0003;padding:12px;z-index:50;min-width:200px;max-height:320px;overflow:auto}
+.col-picker-menu{display:none;position:absolute;left:0;top:calc(100% + 6px);background:#fff;border-radius:10px;box-shadow:0 8px 28px #0003;padding:12px;z-index:50;min-width:200px;max-height:320px;overflow:auto}
 .col-picker.open .col-picker-menu{display:block}
 .col-picker-menu label{display:flex;align-items:center;gap:8px;padding:4px 2px;font-size:12px;cursor:pointer;color:#172033}
 .col-picker-menu label:hover{background:#f0f4fa;border-radius:4px}
@@ -65,7 +117,7 @@ tfoot td{background:#ffe699;font-weight:bold}
 .filter-picker{position:relative}
 .filter-btn{background:#e2e8f0;color:#334155;padding:6px 10px;font-size:12px;border-radius:6px}
 .filter-btn.active{background:#1f4e78;color:#fff}
-.filter-menu{display:none;position:absolute;right:0;top:calc(100% + 6px);background:#fff;border-radius:10px;box-shadow:0 8px 28px #0003;padding:14px;z-index:100;min-width:260px;max-width:min(360px,94vw)}
+.filter-menu{display:none;position:absolute;left:0;top:calc(100% + 6px);background:#fff;border-radius:10px;box-shadow:0 8px 28px #0003;padding:14px;z-index:100;min-width:260px;max-width:min(360px,94vw)}
 .filter-picker.open .filter-menu{display:block}
 .filter-group{margin-bottom:11px}
 .filter-group:last-child{margin-bottom:4px}
@@ -103,16 +155,21 @@ tfoot td{background:#ffe699;font-weight:bold}
 
 /* ===== MAIN TABS (Penjualan | Uang Masuk) ===== */
 .main-tabs{display:flex;gap:6px;margin-top:0}
-.gudang-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;flex:1}
-.gkpi{position:relative;display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:linear-gradient(145deg,#ffffff 0%,#f0f6ff 100%);border-radius:10px;padding:9px 14px;box-shadow:0 0 0 1px rgba(47,110,180,.12),0 2px 10px rgba(31,78,120,.06);overflow:hidden;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
-.gkpi:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(47,110,180,.28),0 8px 22px rgba(31,78,120,.16)}
-.gkpi:active{transform:translateY(0);box-shadow:0 0 0 1px rgba(47,110,180,.28),0 3px 10px rgba(31,78,120,.14)}
+.gudang-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;flex:1}
+.gkpi{position:relative;display:flex;align-items:center;gap:6px 10px;flex-wrap:wrap;background:linear-gradient(145deg,#ffffff 0%,#f0f6ff 100%);border-radius:8px;padding:6px 12px 5px;box-shadow:0 0 0 1px rgba(47,110,180,.12),0 1px 6px rgba(31,78,120,.05);overflow:hidden;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+.gkpi:hover{transform:translateY(-1px);box-shadow:0 0 0 1px rgba(47,110,180,.28),0 6px 16px rgba(31,78,120,.12)}
+.gkpi:active{transform:translateY(0);box-shadow:0 0 0 1px rgba(47,110,180,.28),0 2px 8px rgba(31,78,120,.12)}
 .gkpi::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#305496,#5b9bd5,#305496);opacity:.7}
-.gkpi .gk-label{font-size:11px;font-weight:700;color:#334155;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap}
-.gkpi .gk-stok{font-size:15px;font-weight:800;color:#0f172a;white-space:nowrap}
-.gkpi .gk-meta{font-size:11px;color:#64748b;white-space:nowrap;margin-left:auto}
+.gkpi .gk-label{font-size:10px;font-weight:700;color:#334155;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap}
+.gkpi .gk-stok{font-size:14px;font-weight:800;color:#0f172a;white-space:nowrap}
+.gkpi .gk-meta{font-size:10px;color:#64748b;white-space:nowrap;margin-left:auto}
 .gkpi .gk-meta b{font-weight:600;color:#475569}
-.gkpi .gk-hint{flex-basis:100%;font-size:10px;color:#94a3b8;opacity:.85;margin-top:2px}
+.gkpi .gk-hint{flex-basis:100%;font-size:9px;color:#94a3b8;opacity:.8;margin-top:0;line-height:1.2}
+#page-gudang > .card{margin:8px 0;padding:10px}
+#page-gudang{padding-top:12px}
+#page-gudang .gudang-subtabs{margin:0 0 12px;padding:0;background:transparent;border:0;box-shadow:none}
+.gudang-toolbar{display:flex;align-items:flex-start;gap:12px;margin:0 0 10px;flex-wrap:wrap}
+.gudang-toolbar-right{display:flex;align-items:center;gap:8px;flex:none;margin-left:auto;padding-top:2px}
 /* ===== Modal Input Stok Gudang (Masuk/Keluar per klik kartu) ===== */
 .gmodal-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:300;align-items:center;justify-content:center;padding:16px}
 .gmodal-overlay.show{display:flex}
@@ -256,22 +313,26 @@ tfoot td{background:#ffe699;font-weight:bold}
 .um-page #um-toast.ok{background:#1e7a3c}
 .um-page #um-toast.err{background:var(--danger)}
 #page-cek .cek-card-head{
-  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
-  margin-bottom:12px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  margin-bottom:8px;
 }
-#page-cek .cek-card-title{font-size:15px;font-weight:800;color:#1f4e78;white-space:nowrap}
+#page-cek .cek-card-title{font-size:12px;font-weight:700;color:#1f4e78;white-space:nowrap;letter-spacing:.02em}
 #page-cek .cek-card-actions{
-  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
 }
 #page-cek .cek-card-actions label{
-  font-size:12px;font-weight:700;color:#475569;
+  font-size:11px;font-weight:700;color:#475569;
 }
 #page-cek .cek-card-actions select{
-  width:auto;min-width:170px;padding:6px 10px;border:1px solid #cbd5e1;
-  border-radius:7px;font-size:12px;background:#fff;color:#172033;
+  width:auto;min-width:150px;padding:5px 8px;border:1px solid #cbd5e1;
+  border-radius:6px;font-size:11px;background:#fff;color:#172033;
+}
+#page-cek .cek-card-actions > button{
+  padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;
+  line-height:1.3;
 }
 #page-cek .cek-refresh-btn{
-  padding:6px 10px;font-size:13px;min-width:36px;
+  padding:4px 8px;font-size:12px;min-width:30px;
 }
 #page-cek .cek-bulan-label{font-weight:700;color:#334155;font-size:13px}
 #page-cek .kpis{margin-top:10px}
@@ -281,23 +342,29 @@ tfoot td{background:#ffe699;font-weight:bold}
 .ket-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-size:11px;font-weight:700}
 .ket-badge.ok{background:#dcfce7;color:#166534}
 .ket-badge.bad{background:#fee2e2;color:#b42318}
+.ket-badge.warn{background:#dbeafe;color:#1d4ed8;white-space:normal}
+.ket-badge.alert{background:#dc2626;color:#fff;font-weight:800;white-space:normal;box-shadow:0 0 0 2px #fecaca;animation:ketAlertPulse 1.4s ease-in-out infinite}
+@keyframes ketAlertPulse{0%,100%{box-shadow:0 0 0 2px #fecaca}50%{box-shadow:0 0 0 5px #fca5a5}}
 #cekRingkasanTable td, #cekRingkasanTable th{white-space:nowrap}
 #cekRingkasanTable tfoot td{background:#eef2fb;font-weight:800}
 #cekRupaTable td, #cekRupaTable th{white-space:nowrap}
 #cekRupaTable tfoot td{background:#eef2fb;font-weight:800}
+body.dark #cekRingkasanTable tfoot td,
+body.dark #cekRupaTable tfoot td{
+  background:#1e3a5f;color:#f1f5f9;border-color:#334155;font-weight:800
+}
 #cekDetailTable td.produk-cell{white-space:normal}
 #cekDetailTable .produk-short{font-weight:700;color:#172033}
 #cekDetailTable .produk-full{font-size:11px;color:#94a3b8;margin-top:1px}
 #cekDetailTable td.tgl-cell{font-weight:700;vertical-align:top}
 #page-cek{padding-top:8px}
 #page-cek .cek-subtabs{
-  display:flex;gap:8px;margin:12px 0 14px;flex-wrap:wrap;align-items:center;
-  padding:10px 12px;background:#fff;border-radius:10px;
-  box-shadow:0 1px 6px rgba(31,78,120,.08);border:1px solid #e2e8f0;
+  display:flex;gap:6px;margin:8px 0 10px;flex-wrap:wrap;align-items:center;
+  padding:0;background:transparent;border:0;box-shadow:none;border-radius:0;
 }
 #page-cek .cek-subtab{
-  padding:8px 18px;border:1px solid #cbd5e1;background:#f1f5f9;border-radius:8px;
-  font-size:13px;cursor:pointer;color:#334155;font-weight:700;
+  padding:6px 14px;border:1px solid #cbd5e1;background:#e2e8f0;border-radius:7px;
+  font-size:12px;cursor:pointer;color:#334155;font-weight:700;
   transition:background .15s,color .15s,border-color .15s;
 }
 #page-cek .cek-subtab:hover{background:#e2e8f0}
@@ -306,22 +373,25 @@ tfoot td{background:#ffe699;font-weight:bold}
 #page-cek .cek-panel.active{display:block}
 /* ===== GUDANG SUB-TABS (Fitri | Rupa Rupa) — sama gaya dengan Cek ===== */
 #page-gudang .gudang-subtabs{
-  display:flex;gap:8px;margin:0 0 14px;flex-wrap:wrap;align-items:center;
-  padding:10px 12px;background:#fff;border-radius:10px;
-  box-shadow:0 1px 6px rgba(31,78,120,.08);border:1px solid #e2e8f0;
+  display:flex;gap:6px;margin:0 0 12px;flex-wrap:wrap;align-items:center;
+  padding:0;background:transparent;border:0;box-shadow:none;border-radius:0;
 }
 #page-gudang .gudang-subtab{
-  padding:8px 18px;border:1px solid #cbd5e1;background:#f1f5f9;border-radius:8px;
-  font-size:13px;cursor:pointer;color:#334155;font-weight:700;
+  padding:6px 14px;border:1px solid #cbd5e1;background:#e2e8f0;border-radius:7px;
+  font-size:12px;cursor:pointer;color:#334155;font-weight:700;
   transition:background .15s,color .15s,border-color .15s;
 }
 #page-gudang .gudang-subtab:hover{background:#e2e8f0}
 #page-gudang .gudang-subtab.active{background:#1f4e78;border-color:#1f4e78;color:#fff}
+#page-gudang tr.gudang-saldo-row{background:#eef2fb;font-weight:bold}
+#page-gudang tr.gudang-saldo-row td{color:#0f172a;font-weight:700}
+body.dark #page-gudang tr.gudang-saldo-row{background:#1e3a5f}
+body.dark #page-gudang tr.gudang-saldo-row td{color:#f1f5f9;font-weight:700;border-color:#334155}
 #page-cek .cek-search{
   padding:6px 12px;border:1px solid #cbd5e1;border-radius:7px;font-size:12px;width:180px;background:#fff;color:#172033;
 }
 #page-cek .cek-all-btn{
-  padding:6px 12px;font-size:12px;background:#e2e8f0;color:#334155;border-radius:7px;
+  padding:4px 10px;font-size:11px;background:#e2e8f0;color:#334155;border-radius:6px;
 }
 #page-cek .cek-all-btn.active{background:#1f4e78;color:#fff}
 #page-cek .cek-date-wrap{
@@ -334,6 +404,137 @@ tfoot td{background:#ffe699;font-weight:bold}
   width:auto;min-width:138px;padding:6px 8px;border:1px solid #cbd5e1;
   border-radius:7px;font-size:12px;background:#fff;color:#172033;
 }
+
+/* ===== THEME: DARK MODE ===== */
+body.dark{background:#0f172a;color:#e2e8f0}
+body.dark header{background:#1e3a5f}
+body.dark .card{background:#1e293b;box-shadow:0 2px 10px #0006;color:#e2e8f0}
+body.dark .kpi{
+  background:linear-gradient(145deg,#1e293b 0%,#1a2744 100%);
+  box-shadow:0 0 0 1px rgba(91,155,213,.18),0 4px 16px rgba(0,0,0,.25);
+}
+body.dark .kpi small{color:#94a3b8}
+body.dark .kpi b{color:#f1f5f9}
+body.dark .kpi .kpi-meta{color:#94a3b8}
+body.dark .kpi .kpi-meta b{color:#e2e8f0}
+body.dark .tabs button{background:#334155;color:#cbd5e1}
+body.dark .tabs button.active{background:#3b82f6;color:#fff}
+body.dark .toolbar-row,.body.dark .month-quick label,
+body.dark .month-quick label,body.dark .s7-date-quick label{color:#94a3b8}
+body.dark .month-quick select,body.dark .s7-date-quick select,
+body.dark select,body.dark input[type=date],body.dark input[type=search],
+body.dark input[type=number],body.dark input[type=text]{
+  background:#0f172a;color:#e2e8f0;border-color:#475569
+}
+body.dark .filter-btn,body.dark .col-picker-btn,body.dark .cek-all-btn{
+  background:#334155;color:#e2e8f0
+}
+body.dark .filter-btn.active,body.dark .cek-all-btn.active{background:#3b82f6;color:#fff}
+body.dark #toolbarSaveExcel,body.dark .fm-btn{
+  background:#1e293b !important;color:#cbd5e1 !important;border-color:#475569 !important;
+  box-shadow:none
+}
+body.dark #toolbarSaveExcel:hover,body.dark .fm-btn:hover{
+  background:#334155 !important;color:#e2e8f0 !important
+}
+body.dark .fm-btn.active{background:#3b82f6;border-color:#3b82f6;color:#fff}
+body.dark .filter-menu,body.dark .col-picker-menu,body.dark .dd-menu{
+  background:#1e293b;color:#e2e8f0;box-shadow:0 8px 28px #0008
+}
+body.dark .filter-menu label,body.dark .col-picker-menu label{color:#e2e8f0}
+body.dark .filter-group label{color:#94a3b8}
+body.dark .filter-reset{background:#334155;color:#cbd5e1}
+body.dark .filter-info{color:#94a3b8}
+body.dark .menu-title{color:#93c5fd}
+body.dark .menu-label{color:#cbd5e1}
+body.dark .dd-menu .hint,body.dark .status{color:#94a3b8}
+body.dark table{color:#e2e8f0}
+body.dark th{background:#1e3a5f;color:#fff;border-color:#334155}
+body.dark td{border-color:#334155;color:#e2e8f0}
+body.dark tbody tr:hover{background:#243447}
+body.dark tfoot td{background:#1e3a5f;color:#f1f5f9}
+body.dark .tablebox{background:transparent}
+body.dark .vfoot td{background:#1e3a5f}
+body.dark .main-tab{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25)}
+body.dark .main-tab.active{background:#fff;color:#1e3a5f}
+body.dark .dd-toggle{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
+body.dark #page-gudang .gudang-subtab,
+body.dark #page-cek .cek-subtab{
+  background:#1e293b;color:#94a3b8;border-color:#475569
+}
+body.dark #page-gudang .gudang-subtab:hover,
+body.dark #page-cek .cek-subtab:hover{
+  background:#334155;color:#e2e8f0
+}
+body.dark #page-gudang .gudang-subtab.active,
+body.dark #page-cek .cek-subtab.active{
+  background:#3b82f6;border-color:#3b82f6;color:#fff
+}
+body.dark .gkpi{
+  background:linear-gradient(145deg,#1e293b 0%,#1a2744 100%);
+  box-shadow:0 0 0 1px rgba(91,155,213,.2)
+}
+body.dark .gkpi .gk-label{color:#94a3b8}
+body.dark .gkpi .gk-stok{color:#f1f5f9}
+body.dark .gkpi .gk-meta{color:#94a3b8}
+body.dark .gkpi .gk-meta b{color:#cbd5e1}
+body.dark .gkpi .gk-hint{color:#64748b}
+body.dark .faktur-card{
+  background:linear-gradient(145deg,#1e293b 0%,#1a2744 100%);
+  border-color:#334155;box-shadow:0 2px 10px #0005
+}
+body.dark .faktur-card .fc-faktur{color:#93c5fd}
+body.dark .faktur-card .fc-tgl{color:#94a3b8}
+body.dark .faktur-card .fc-meta{color:#94a3b8}
+body.dark .faktur-card .fc-meta b{color:#e2e8f0}
+body.dark .faktur-card .fc-badge{background:#475569;color:#e2e8f0}
+body.dark .faktur-card .fc-badge.cash{
+  background:#38bdf8;color:#0c4a6e;
+  box-shadow:0 0 0 1px rgba(56,189,248,.55),0 0 12px rgba(56,189,248,.3);
+}
+body.dark .faktur-card .fc-badge.tempo{
+  background:#f97316;color:#1c0a00;
+  box-shadow:0 0 0 1px rgba(249,115,22,.5),0 0 12px rgba(249,115,22,.25);
+}
+body.dark .faktur-card .fc-nums{border-top-color:#334155}
+body.dark .faktur-card .fc-num-label{color:#94a3b8}
+body.dark .faktur-card .fc-num-val{color:#f1f5f9}
+body.dark .faktur-card .fc-num-val.profit{color:#4ade80}
+body.dark .faktur-card .fc-items li{background:#0f172a;color:#cbd5e1}
+body.dark .faktur-card .fc-items .fc-qty{color:#93c5fd}
+body.dark .faktur-card .fc-items .fc-line{color:#e2e8f0}
+body.dark .cek-card-title{color:#93c5fd}
+body.dark .cek-card-actions label,body.dark .cek-bulan-label{color:#94a3b8}
+body.dark .ket-badge.ok{background:#14532d;color:#86efac}
+body.dark .ket-badge.bad{background:#7f1d1d;color:#fca5a5}
+body.dark .ket-badge.warn{background:#1e3a8a;color:#93c5fd}
+body.dark .ket-badge.alert{background:#991b1b;color:#fecaca}
+body.dark .gmodal-box{background:#1e293b;color:#e2e8f0}
+body.dark .gmodal-box h3{color:#93c5fd}
+body.dark .gmodal-box h3 span{color:#f1f5f9}
+body.dark .gmodal-sub{color:#94a3b8}
+body.dark .gmodal-field label{color:#94a3b8}
+body.dark .gmodal-field input{background:#0f172a;color:#e2e8f0;border-color:#475569}
+body.dark .gmodal-info{background:#0f172a;border-color:#334155;color:#cbd5e1}
+body.dark .gmodal-ghost{background:#334155;color:#e2e8f0}
+body.dark .report-bar{background:#1e293b;border-color:#334155}
+body.dark #table button[style*="background:#fff"],
+body.dark #table button[style*="background: #fff"]{
+  background:#1e293b !important;color:#cbd5e1 !important;border-color:#475569 !important
+}
+body.dark .busy{background:rgba(15,23,42,.7);color:#93c5fd}
+body.dark .empty{color:#94a3b8}
+body.dark .theme-btn{
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);
+  color:#fff;font-size:12px;padding:4px 10px;border-radius:6px;cursor:pointer;font-weight:700
+}
+body.dark .theme-btn:hover{background:rgba(255,255,255,.28)}
+.theme-btn{
+  background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);
+  color:#fff;font-size:12px;padding:4px 10px;border-radius:6px;cursor:pointer;font-weight:700
+}
+.theme-btn:hover{background:rgba(255,255,255,.28)}
+
 </style>
 </head>
 <body>
@@ -349,6 +550,7 @@ tfoot td{background:#ffe699;font-weight:bold}
       <button type="button" class="main-tab" data-tab="gudang">Data Gudang</button>
       <button type="button" class="main-tab" data-tab="cek">Cek</button>
     </nav>
+    <button type="button" class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Mode gelap / terang">🌙</button>
     <div class="dd" id="menuDd">
       <button type="button" class="dd-toggle" onclick="toggleDd()"><span>☰ MENU</span><span class="chev">▼</span></button>
       <div class="dd-backdrop" onclick="closeDd()"></div>
@@ -409,17 +611,26 @@ tfoot td{background:#ffe699;font-weight:bold}
   </div>
   <div id="result" class="card" style="display:none">
     <div class="tabs">
-      <button class="active" onclick="show('s0',this)">Transaksi</button>
+      <button onclick="show('s0',this)">Transaksi</button>
       <button onclick="show('s7',this)">Sales per Produk</button>
-      <button onclick="show('s6',this)">Faktur</button>
+      <button class="active" onclick="show('s6',this)">Faktur</button>
       <button onclick="show('s1',this)">Produk</button>
       <button onclick="show('s2',this)">Profit Per Pembayaran</button>
       <button onclick="show('s3',this)">Profit Penjualan per Produk</button>
       <button onclick="show('s4',this)">Rekap per Sales</button>
       <button onclick="show('s5',this)">Margin % per Produk</button>
+    </div>
+    <div class="toolbar-row">
+      <div class="toolbar-left">
       <div class="month-quick">
         <label for="filterMonth">Bulan</label>
         <select id="filterMonth" onchange="applyFilters()"><option value="">Semua bulan</option></select>
+        <label for="filterProductQuick">Produk</label>
+        <select id="filterProductQuick" onchange="onProductQuickChange()">
+          <option value="">Semua produk</option>
+          <option value="FITRI">Fitri</option>
+          <option value="RUPA_RUPA">Rupa Rupa</option>
+        </select>
         <div class="filter-picker" id="filterPicker">
           <button type="button" class="filter-btn" id="filterBtn" title="Filter" onclick="event.stopPropagation();toggleFilterPicker()">⚙<span id="filterCount"></span></button>
           <div class="filter-menu" id="filterMenu" onclick="event.stopPropagation()">
@@ -442,7 +653,7 @@ tfoot td{background:#ffe699;font-weight:bold}
           </div>
           <div class="filter-group">
             <label>Produk</label>
-            <select id="filterProduct">
+            <select id="filterProduct" onchange="document.getElementById('filterProductQuick') && (document.getElementById('filterProductQuick').value=this.value)">
               <option value="">Semua produk</option>
               <option value="FITRI">Fitri</option>
               <option value="RUPA_RUPA">Rupa Rupa (selain Fitri)</option>
@@ -472,6 +683,16 @@ tfoot td{background:#ffe699;font-weight:bold}
         <button type="button" class="col-picker-btn" onclick="event.stopPropagation();toggleColPicker()">☰ Kolom</button>
         <div class="col-picker-menu" id="colPickerMenu" onclick="event.stopPropagation()"></div>
       </div>
+      <div class="s7-date-quick" id="s7DateQuick" style="display:none">
+        <label for="s7DateFilter">Filter tgl</label>
+        <select id="s7DateFilter" onchange="setS7DateFilter(this.value)"><option value="">Semua tanggal</option></select>
+      </div>
+      <div class="faktur-mode-toggle" id="fakturModeToggle">
+        <button type="button" class="fm-btn" id="fmTableBtn" onclick="setFakturViewMode('table')">MODE TABEL</button>
+        <button type="button" class="fm-btn active" id="fmCardBtn" onclick="setFakturViewMode('card')">MODE KARTU</button>
+      </div>
+      </div>
+      <button type="button" id="toolbarSaveExcel" onclick="saveExcelTab(_activeTab||'s0')" style="padding:7px 12px;border:1px solid #b8c4d1;border-radius:6px;background:#f1f5f9;color:#1f2937;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">💾 Simpan Excel</button>
     </div>
     <div id="table">
       <div id="panel_s0" class="view">
@@ -495,8 +716,9 @@ tfoot td{background:#ffe699;font-weight:bold}
     <button type="button" class="gudang-subtab active" data-gudang="fitri" onclick="switchGudangSub('fitri',this)">🧴 Fitri</button>
     <button type="button" class="gudang-subtab" data-gudang="rupa" onclick="switchGudangSub('rupa',this)">📦 Rupa Rupa</button>
   </div>
-  <div class="card" style="display:flex;align-items:flex-start;gap:14px">
+  <div class="gudang-toolbar">
     <div id="gudangKpis" class="gudang-kpis"></div>
+    <div class="gudang-toolbar-right">
     <div style="display:flex;align-items:center;gap:8px;flex:none">
       <label style="font-size:12px;font-weight:bold;color:#475569">Bulan</label>
       <select id="gudangMonth" onchange="renderGudangPage(gudangData)" style="width:auto;min-width:170px;padding:6px 10px;border:1px solid #cbd5e1;border-radius:7px;font-size:12px">
@@ -518,6 +740,7 @@ tfoot td{background:#ffe699;font-weight:bold}
           <div id="gudangStatus" class="hint" style="margin-top:8px">Belum ada data gudang.</div>
         </div>
       </div>
+    </div>
     </div>
   </div>
 
@@ -1024,7 +1247,7 @@ self.onmessage = function(e){
     populatedFiltersBound = totalRows > 0;
     populateFiltersDOM().catch(()=>{});
     if (typeof buildColPicker === 'function') buildColPicker();
-    show('s0', document.querySelector('.tabs button'));
+    show('s6', document.querySelector('.tabs button.active') || document.querySelector('.tabs button'));
     const blLabel = (replacedMonths && replacedMonths.length)
       ? replacedMonths.map(monthLabel).join(', ')
       : '';
@@ -1163,7 +1386,34 @@ self.onmessage = function(e){
     return out;
   }
 
+  function onProductQuickChange(){
+    const q = document.getElementById('filterProductQuick');
+    const p = document.getElementById('filterProduct');
+    if (q && p) p.value = q.value;
+    applyFilters();
+  }
+  function syncProductQuickFromFilters(){
+    const q = document.getElementById('filterProductQuick');
+    const p = document.getElementById('filterProduct');
+    if (q && p) q.value = p.value || filters.product || '';
+  }
+  let _applyFiltersToken = 0;
   async function applyFilters(){
+    // Guard supaya pemanggilan applyFilters() yang tumpang-tindih (mis. dipicu
+    // beberapa kali berturut-turut tanpa di-await dari onchange/onclick) tidak
+    // saling menimpa hasil secara tidak berurutan (race condition).
+    const _myToken = ++_applyFiltersToken;
+    const q = document.getElementById('filterProductQuick');
+    const p = document.getElementById('filterProduct');
+    // samakan kedua kontrol produk
+    if (q && p) {
+      if (document.activeElement === q) p.value = q.value;
+      else if (document.activeElement === p) q.value = p.value;
+      else if (q.value !== p.value) {
+        // prefer nilai di filter menu jika beda (mis. dari restore), lalu sync quick
+        q.value = p.value;
+      }
+    }
     filters = {
       month:       document.getElementById('filterMonth').value,
       sales:       document.getElementById('filterSales').value,
@@ -1184,6 +1434,7 @@ self.onmessage = function(e){
     if (useIDB) { try { await db.meta.put({key:'filters', value:filters}); } catch(e){} }
     showBusy('Memfilter…');
     const filtr = await fetchFiltered();
+    if (_myToken !== _applyFiltersToken) { hideBusy(); return; } // ada pemanggilan applyFilters() lain yang lebih baru, buang hasil ini
     filtr.sort((a,b) => (b._ts||0) - (a._ts||0));
     filteredRows = filtr;
     materialise();
@@ -1373,6 +1624,8 @@ self.onmessage = function(e){
     document.getElementById('filterMonth').value   = filters.month;
     document.getElementById('filterSales').value   = filters.sales;
     document.getElementById('filterProduct').value = filters.product;
+    const _fpq = document.getElementById('filterProductQuick');
+    if (_fpq) _fpq.value = filters.product || '';
     document.getElementById('filterPayment').value = filters.payment;
     const df = document.getElementById('filterDateFrom');
     const dt = document.getElementById('filterDateTo');
@@ -1428,7 +1681,13 @@ self.onmessage = function(e){
         [...new Set(rows.map(x => monthKey(x.Tanggal || x.tanggal)).filter(Boolean))].sort().reverse().map(m => '<option value="'+m+'">'+monthLabel(m)+'</option>').join('');
     }
     const active = document.querySelector('.tabs button.active') || document.querySelector('.tabs button');
-    show('s0', active);
+    let tabId = _activeTab || 's6';
+    if (active) {
+      const oc = active.getAttribute('onclick') || '';
+      const m = oc.match(/show\('([^']+)'/);
+      if (m) tabId = m[1];
+    }
+    show(tabId, active);
     const total = useIDB ? await db.tx.count() : rows.length;
     document.getElementById('save').disabled = total === 0;
   }
@@ -1442,7 +1701,8 @@ self.onmessage = function(e){
       if (!count) return alert('Tidak ada data pada bulan tersebut.');
       if (!confirm('Hapus ' + count.toLocaleString('id-ID') + ' baris pada ' + monthLabel(m) + '?')) return;
       await db.tx.where('bulan').equals(m).delete();
-      await db.meta.put({key:'months', value:(await db.meta.get('months')).value.filter(x => x !== m)});
+      const monthsMeta = ((await db.meta.get('months')) || {}).value || [];
+      await db.meta.put({key:'months', value: monthsMeta.filter(x => x !== m)});
       await refreshAfterDataChange();
       setStatus('Data bulan ' + monthLabel(m) + ' berhasil dihapus: ' + count.toLocaleString('id-ID') + ' baris.');
       closeDd();
@@ -1683,10 +1943,7 @@ self.onmessage = function(e){
 
   /* ------------- tombol laporan Excel per sub-tab ------------- */
   function reportBar(tab, label){
-    return '<div class="report-bar" style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px;padding:8px 10px;background:#f8fafc;border:1px solid #dbe3ea;border-radius:7px">' +
-      '<div style="font-size:12px;color:#475569;font-weight:600">Laporan ' + label + '</div>' +
-      '<button type="button" onclick="saveExcelTab(\'' + tab + '\')" style="padding:7px 12px;border:1px solid #b8c4d1;border-radius:6px;background:#fff;color:#1f2937;font-size:12px;font-weight:700;cursor:pointer">💾 Simpan Excel</button>' +
-    '</div>';
+    return '';
   }
 
   function reportMetaRows(title){
@@ -1795,10 +2052,34 @@ self.onmessage = function(e){
   }
 
   /* ------------- virtualised Transaksi panel ------------- */
+  let _activeTab = 's6';
   function show(t, b){
+    _activeTab = t;
     document.querySelectorAll('.tabs button').forEach(x => x.classList.remove('active'));
     if (b) b.classList.add('active');
     document.getElementById('colPicker').style.display = (t === 's0') ? 'block' : 'none';
+    const s7q = document.getElementById('s7DateQuick');
+    if (s7q) {
+      s7q.style.display = (t === 's7') ? 'flex' : 'none';
+      if (t === 's7') {
+        const sel = document.getElementById('s7DateFilter');
+        if (sel) {
+          const cur = s7DateFilter || '';
+          sel.innerHTML = s7DateOptionsHtml();
+          sel.value = cur;
+        }
+      }
+    }
+    const fmt = document.getElementById('fakturModeToggle');
+    if (fmt) {
+      fmt.style.display = (t === 's6') ? 'flex' : 'none';
+      if (t === 's6') {
+        const tb = document.getElementById('fmTableBtn');
+        const cb = document.getElementById('fmCardBtn');
+        if (tb) tb.classList.toggle('active', fakturViewMode === 'table');
+        if (cb) cb.classList.toggle('active', fakturViewMode === 'card');
+      }
+    }
     closeColPicker();
     document.querySelectorAll('#table .view').forEach(v => v.style.display = 'none');
     const panel = document.getElementById('panel_' + t);
@@ -1890,7 +2171,7 @@ self.onmessage = function(e){
 
   function buildPanelS0(){
     const box = document.getElementById('s0box'); if (!box) return;
-    const act = document.getElementById('s0actions'); if (act) act.innerHTML = reportBar('s0','Transaksi');
+    const act = document.getElementById('s0actions'); if (act) act.innerHTML = '';
     s0Vis = TX_COLS.filter(c => colVis[c.k]);
     const head = s0Vis.map(c => '<th>' + c.label + '</th>').join('');
     const totMap = {no:'TOTAL',tgl:'',faktur:'',produk:'',qty:R.qty,satuan:'',hjual:'',hargabeli:'',disc:'',
@@ -2006,7 +2287,7 @@ self.onmessage = function(e){
       }
       p.total += qty;
     }
-    const dates = [...byDate.entries()].sort((a,b) => a[1].ts - b[1].ts);
+    const dates = [...byDate.entries()].sort((a,b) => b[1].ts - a[1].ts);
     const rows = [];
     dates.forEach(([key, g]) => {
       const prods = [...g.products.entries()].sort((a,b) => a[0].localeCompare(b[0], 'id'));
@@ -2084,20 +2365,7 @@ self.onmessage = function(e){
       SO_S7.map(s => '<td class="num">' + (pivot.grand[s] ? pivot.grand[s].toLocaleString('id-ID') : '0') + '</td>').join('') +
       '<td class="num">' + (pivot.grandTotal ? pivot.grandTotal.toLocaleString('id-ID') : '0') + '</td></tr>';
 
-    const filterBar =
-      '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 10px;padding:8px 10px;background:#f8fafc;border:1px solid #dbe3ea;border-radius:7px">' +
-        '<div style="font-size:13px;color:#1f4e78;font-weight:700">Qty Penjualan Per Sales Per Tgl</div>' +
-        '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">' +
-          '<label style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.04em">Filter tgl</label>' +
-          '<select id="s7DateFilter" onchange="setS7DateFilter(this.value)" style="padding:6px 10px;border:1px solid #cbd5e1;border-radius:6px;font-size:12px;background:#fff;min-width:140px">' +
-            s7DateOptionsHtml() +
-          '</select>' +
-          '<button type="button" onclick="saveExcelTab(\'s7\')" style="padding:7px 12px;border:1px solid #b8c4d1;border-radius:6px;background:#fff;color:#1f2937;font-size:12px;font-weight:700;cursor:pointer">💾 Simpan Excel</button>' +
-        '</div>' +
-      '</div>';
-
-    return filterBar +
-      '<div class="tablebox"><table><thead><tr>' +
+    return '<div class="tablebox"><table><thead><tr>' +
       head.map(h => '<th>' + h + '</th>').join('') +
       '</tr></thead><tbody>' + body + '</tbody><tfoot>' + foot + '</tfoot></table></div>';
   }
@@ -2180,9 +2448,9 @@ self.onmessage = function(e){
       if (!g.bayar && x.Pembayaran) g.bayar = x.Pembayaran;
       if (!g.customer && x.Customer) g.customer = x.Customer;
     }
-    // urut: tanggal asc, lalu no faktur
+    // urut: tanggal terkini di atas, lalu no faktur
     const list = [...groups.values()].sort((a,b) => {
-      if (a.ts !== b.ts) return (a.ts||0) - (b.ts||0);
+      if (a.ts !== b.ts) return (b.ts||0) - (a.ts||0);
       return String(a.faktur).localeCompare(String(b.faktur));
     });
     // flatten ke baris tampilan: baris pertama grup menampilkan nominal & profit
@@ -2205,7 +2473,95 @@ self.onmessage = function(e){
     return rows;
   }
 
+  let fakturViewMode = 'card'; // 'table' | 'card'
+
+  function setFakturViewMode(mode){
+    fakturViewMode = (mode === 'card') ? 'card' : 'table';
+    const tb = document.getElementById('fmTableBtn');
+    const cb = document.getElementById('fmCardBtn');
+    if (tb) tb.classList.toggle('active', fakturViewMode === 'table');
+    if (cb) cb.classList.toggle('active', fakturViewMode === 'card');
+    viewCache['s6'] = null;
+    const btn = document.querySelector('.tabs button.active');
+    show('s6', btn);
+  }
+
+  function buildFakturGroups(){
+    const groups = new Map();
+    const n = filteredRows.length;
+    for (let i = 0; i < n; i++){
+      const x = getUiRow(i);
+      if (!x) continue;
+      const nf = String(x['No. Faktur'] ?? x.faktur ?? '').trim() || '(Tanpa Faktur)';
+      const total = N(x.Total);
+      const pr = total - N(x.Jumlah) * N(x['Harga Beli']);
+      let g = groups.get(nf);
+      if (!g){
+        g = {
+          faktur: nf, items: [], nominal: 0, profit: 0,
+          tgl: x.Tanggal, ts: x._ts || 0,
+          sales: x.Sales || '', bayar: x.Pembayaran || '', customer: x.Customer || ''
+        };
+        groups.set(nf, g);
+      }
+      g.items.push(x);
+      g.nominal += total;
+      g.profit += pr;
+      if (x._ts && (!g.ts || x._ts < g.ts)){ g.ts = x._ts; g.tgl = x.Tanggal; }
+      if (!g.sales && x.Sales) g.sales = x.Sales;
+      if (!g.bayar && x.Pembayaran) g.bayar = x.Pembayaran;
+      if (!g.customer && x.Customer) g.customer = x.Customer;
+    }
+    return [...groups.values()].sort((a,b) => {
+      if (a.ts !== b.ts) return (b.ts||0) - (a.ts||0);
+      return String(a.faktur).localeCompare(String(b.faktur));
+    });
+  }
+
+  function renderRekapPerFakturCards(){
+    const list = buildFakturGroups();
+    if (!list.length){
+      return '<div style="text-align:center;padding:36px;color:#64748b">Belum ada data faktur.</div>';
+    }
+    const cards = list.map(g => {
+      const bayarU = String(g.bayar || '').toUpperCase();
+      const badgeCls = bayarU.includes('CASH') ? 'cash' : (bayarU.includes('TEMPO') ? 'tempo' : '');
+      const items = g.items.map(x => {
+        const prod = String(x.Produk || '').replace(/</g,'&lt;');
+        const qty = N(x.Jumlah);
+        const sat = x.Satuan || '';
+        const line = rp(x.Total);
+        return '<li><span class="fc-prod" title="' + prod.replace(/"/g,'&quot;') + '">' + prod +
+          '</span><span class="fc-qty">' + qty + (sat ? ' ' + sat : '') +
+          '</span><span class="fc-line">' + line + '</span></li>';
+      }).join('');
+      return '<div class="faktur-card">' +
+        '<div class="fc-head">' +
+          '<div class="fc-faktur">' + String(g.faktur).replace(/</g,'&lt;') + '</div>' +
+          '<div class="fc-head-right">' +
+            '<div class="fc-tgl">' + fmtTgl(g.tgl) + '</div>' +
+            (g.bayar ? '<span class="fc-badge ' + badgeCls + '">' + String(g.bayar).replace(/</g,'&lt;') + '</span>' : '') +
+          '</div>' +
+        '</div>' +
+        '<div class="fc-meta">' +
+          (g.sales ? '<span>Sales <b>' + String(g.sales).replace(/</g,'&lt;') + '</b></span>' : '') +
+          (g.customer ? '<span>Cust <b title="' + String(g.customer).replace(/"/g,'&quot;') + '">' + String(g.customer).replace(/</g,'&lt;') + '</b></span>' : '') +
+        '</div>' +
+        '<ul class="fc-items">' + items + '</ul>' +
+        '<div class="fc-nums">' +
+          '<div><div class="fc-num-label">Nominal</div><div class="fc-num-val">' + rp(g.nominal) + '</div></div>' +
+          '<div style="text-align:right"><div class="fc-num-label">Profit</div><div class="fc-num-val profit">' + rp(g.profit) + '</div></div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+    const summary = '<div style="font-size:12px;color:#475569;margin:0 0 10px;font-weight:600">' +
+      list.length.toLocaleString('id-ID') + ' faktur · Qty ' + (R.qty||0).toLocaleString('id-ID') +
+      ' · Nominal ' + rp(R.sales) + ' · Profit ' + rp(R.profit) + '</div>';
+    return summary + '<div class="faktur-cards">' + cards + '</div>';
+  }
+
   function renderRekapPerFaktur(){
+    if (fakturViewMode === 'card') return renderRekapPerFakturCards();
     const allRows = buildFakturRows();
     const totalLines = allRows.length;
     const pageRows = sliceRekap('s6', allRows);
@@ -2345,7 +2701,7 @@ self.onmessage = function(e){
       document.getElementById('save').disabled          = false;
       buildColPicker();
       await applyFilters();
-      show('s0', document.querySelector('.tabs button'));
+      show('s6', document.querySelector('.tabs button.active') || document.querySelector('.tabs button'));
       setStatus('Data dari IndexedDB dimuat: ' + total.toLocaleString('id-ID') + ' baris (persistensi aktif).');
     } catch(e){
       console.warn('restoreFromDB gagal', e);
@@ -2366,6 +2722,20 @@ self.onmessage = function(e){
     const d = toDate(v);
     if (!d || isNaN(d.getTime())) return '';
     return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+  // Versi UTC: khusus untuk tanggal Data Gudang, yang selalu dibuat via Date.UTC(...)
+  // (parseGudangSheet/dateInputToUTC). Memakai getter lokal (getFullYear/getMonth/getDate)
+  // pada tanggal yang dikonstruksi UTC bisa menggeser tanggal/bulan di zona waktu tertentu —
+  // fungsi ini memastikan pembacaannya konsisten dengan cara tanggal itu dibuat.
+  function cekDateKeyUTC(v){
+    const d = (v instanceof Date) ? v : toDate(v);
+    if (!d || isNaN(d.getTime())) return '';
+    return d.getUTCFullYear() + '-' + String(d.getUTCMonth()+1).padStart(2,'0') + '-' + String(d.getUTCDate()).padStart(2,'0');
+  }
+  function monthKeyUTC(v){
+    const d = (v instanceof Date) ? v : toDate(v);
+    if (!d || isNaN(d.getTime())) return '';
+    return d.getUTCFullYear() + '-' + String(d.getUTCMonth()+1).padStart(2,'0');
   }
   function cekDateLabel(key){
     if (!key) return '';
@@ -2453,7 +2823,7 @@ self.onmessage = function(e){
     }
     if (gudangData && gudangData.rows){
       gudangData.rows.forEach(r => {
-        const k = cekDateKey(r.tanggal);
+        const k = cekDateKeyUTC(r.tanggal);
         if (k) months.add(cekMonthKey(k));
       });
     }
@@ -2490,8 +2860,41 @@ self.onmessage = function(e){
     return String(d).padStart(2,'0') + '-' + bulan + '-' + String(y).slice(-2);
   }
 
-  function ketBadge(ok){
-    return '<span class="ket-badge ' + (ok ? 'ok' : 'bad') + '">' + (ok ? '✅ Cocok' : '⚠️ Beda') + '</span>';
+  /* selisih = PENJUALAN - OUTPUT GUDANG
+     selisih === 0  -> Cocok
+     selisih  > 0   -> OUTPUT GUDANG lebih sedikit (penjualan lebih banyak) -> normal, kemungkinan ada transaksi batal
+     selisih  < 0   -> OUTPUT GUDANG lebih banyak -> perlu perhatian, tampilkan tanggal2 yg jadi penyebabnya bila ada */
+  function ketBadge(selisih, dates){
+    if (selisih === 0) {
+      return '<span class="ket-badge ok">✅ Cocok</span>';
+    }
+    if (selisih > 0) {
+      return '<span class="ket-badge warn" title="Normal, kemungkinan ada transaksi batal">🔷 Penjualan Lebih Banyak</span>';
+    }
+    const dTxt = (dates && dates.length) ? (' (' + dates.join(', ') + ')') : '';
+    return '<span class="ket-badge alert">🚨 GUDANG LEBIH BANYAK!!' + dTxt + '</span>';
+  }
+
+  /* Versi teks polos dari ketBadge, dipakai untuk export xlsx */
+  function ketText(selisih, dates){
+    if (selisih === 0) return 'Cocok';
+    if (selisih > 0) return 'Penjualan Lebih Banyak';
+    return 'Gudang Lebih Banyak' + ((dates && dates.length) ? (' (' + dates.join(', ') + ')') : '');
+  }
+
+  /* Untuk baris rekap (per produk, gabungan banyak tanggal): cari daftar tanggal
+     di mana OUTPUT GUDANG > PENJUALAN pada produk tsb, agar bisa ditampilkan di badge. */
+  function ketGudangLebihDates(perDatePenjualan, perDateGudang){
+    const pd = perDatePenjualan || {};
+    const gd = perDateGudang || {};
+    const keys = Array.from(new Set([...Object.keys(pd), ...Object.keys(gd)])).sort();
+    const out = [];
+    keys.forEach(k => {
+      const p = N(pd[k]);
+      const g = N(gd[k]);
+      if (g > p) out.push(cekDateLabelLong(k));
+    });
+    return out;
   }
 
   /* mode: 'fitri' | 'rupa' — sourceRows = baris internal (hasil query Dexie yang sudah difilter)
@@ -2564,7 +2967,7 @@ self.onmessage = function(e){
     if (gudangData && gudangData.rows && gudangKeys.length) {
       for (let i = 0; i < gudangData.rows.length; i++) {
         const r = gudangData.rows[i];
-        const dk = cekDateKey(r.tanggal);
+        const dk = cekDateKeyUTC(r.tanggal);
         if (!dk) continue;
         if (month && cekMonthKey(dk) !== month) continue;
         if (!dateKeyInRange(dk)) continue;
@@ -2643,14 +3046,16 @@ self.onmessage = function(e){
         bedaAbsSum += Math.abs(selisih);
         if (selisih > 0) kurangSum += selisih;   // penjualan > gudang => gudang KURANG
         if (selisih < 0) lebihSum += Math.abs(selisih); // gudang > penjualan => gudang LEBIH
+        const gudangLebihDates = (hasGudang && selisih < 0) ? ketGudangLebihDates(penjualanPD[prod.key], gudangPD[prod.key]) : [];
+        const selColor = ok ? '#166534' : (selisih > 0 ? '#1d4ed8' : '#dc2626');
 
         rBody += '<tr>' +
           '<td>' + prod.name + '</td>' +
           cells +
           '<td class="num" style="font-weight:800">' + nfQty(rowTotal) + '</td>' +
           '<td class="num">' + (hasGudang ? nfQty(gTotal) : '-') + '</td>' +
-          '<td class="num" style="color:' + (ok ? '#166534' : '#b42318') + ';font-weight:700">' + (selisih > 0 ? '+' : '') + nfQty(selisih) + '</td>' +
-          '<td>' + (hasGudang ? ketBadge(ok) : '-') + '</td>' +
+          '<td class="num" style="color:' + selColor + ';font-weight:700">' + (selisih > 0 ? '+' : '') + nfQty(selisih) + '</td>' +
+          '<td>' + (hasGudang ? ketBadge(selisih, gudangLebihDates) : '-') + '</td>' +
         '</tr>';
       });
 
@@ -2693,13 +3098,14 @@ self.onmessage = function(e){
             const g = N((gudangPD[prod.key] || {})[key]);
             const s = p - g;
             const ok = s === 0;
+            const sColor = ok ? '#166534' : (s > 0 ? '#1d4ed8' : '#dc2626');
             dBody += '<tr>' +
               (idx === 0 ? '<td class="tgl-cell" rowspan="' + products.length + '">' + cekDateLabelLong(key) + '</td>' : '') +
               '<td class="produk-cell"><div class="produk-short">' + fitriShortName(prod.name) + '</div><div class="produk-full">' + prod.name + '</div></td>' +
               '<td class="num">' + nfQty(p) + '</td>' +
               '<td class="num">' + (hasGudang ? nfQty(g) : '-') + '</td>' +
-              '<td class="num" style="color:' + (ok ? '#166534' : '#b42318') + ';font-weight:700">' + (s > 0 ? '+' : '') + nfQty(s) + '</td>' +
-              '<td>' + (hasGudang ? ketBadge(ok) : '-') + '</td>' +
+              '<td class="num" style="color:' + sColor + ';font-weight:700">' + (s > 0 ? '+' : '') + nfQty(s) + '</td>' +
+              '<td>' + (hasGudang ? ketBadge(s) : '-') + '</td>' +
             '</tr>';
           });
         });
@@ -2711,7 +3117,7 @@ self.onmessage = function(e){
 
   function downloadCekRingkasan(){
     if (!_cekLastData || !_cekLastData.products.length) return alert('Belum ada data untuk diunduh.');
-    const {products, salesList, penjualanPS, gudangPD, hasGudang} = _cekLastData;
+    const {products, salesList, penjualanPS, penjualanPD, gudangPD, hasGudang} = _cekLastData;
     const head = ['PRODUK', ...salesList, 'TOTAL', 'OUTPUT GUDANG', 'SELISIH', 'KET'];
     const salesGrand = salesList.map(() => 0);
     let grandTotal = 0, grandGudang = 0;
@@ -2722,7 +3128,8 @@ self.onmessage = function(e){
       const gTotal = Object.values(gudangPD[prod.key] || {}).reduce((a,b)=>a+N(b),0);
       grandTotal += rowTotal; grandGudang += gTotal;
       const selisih = rowTotal - gTotal;
-      return [prod.name, ...cells, rowTotal, hasGudang ? gTotal : '-', selisih, hasGudang ? (selisih===0?'Cocok':'Beda') : '-'];
+      const gudangLebihDates = selisih < 0 ? ketGudangLebihDates(penjualanPD[prod.key], gudangPD[prod.key]) : [];
+      return [prod.name, ...cells, rowTotal, hasGudang ? gTotal : '-', selisih, hasGudang ? ketText(selisih, gudangLebihDates) : '-'];
     });
     const foot = ['TOTAL', ...salesGrand, grandTotal, hasGudang?grandGudang:'-', grandTotal-grandGudang, ''];
     const ws = XLSX.utils.aoa_to_sheet([head, ...rows, foot]);
@@ -2747,7 +3154,7 @@ self.onmessage = function(e){
         const p = N((penjualanPD[prod.key] || {})[key]);
         const g = N((gudangPD[prod.key] || {})[key]);
         const s = p - g;
-        rows.push([cekDateLabelLong(key), prod.name, p, hasGudang ? g : '-', s, hasGudang ? (s===0?'Cocok':'Beda') : '-']);
+        rows.push([cekDateLabelLong(key), prod.name, p, hasGudang ? g : '-', s, hasGudang ? ketText(s) : '-']);
       });
     });
     const ws = XLSX.utils.aoa_to_sheet([head, ...rows]);
@@ -2869,7 +3276,7 @@ self.onmessage = function(e){
       thead.innerHTML = ''; tfoot.innerHTML = '';
       return;
     }
-    const {products, salesList, penjualanPS, gudangPD, hasGudang} = _cekRupaLastData;
+    const {products, salesList, penjualanPS, penjualanPD, gudangPD, hasGudang} = _cekRupaLastData;
     const q = (document.getElementById('cekRupaSearch')?.value || '').trim().toUpperCase();
 
     let list = products;
@@ -2911,15 +3318,17 @@ self.onmessage = function(e){
       const ok = selisih === 0;
       const hasGForProd = hasGudang && Object.keys(gudangPD[prod.key] || {}).length > 0;
       grandTotal += rowTotal; grandGudang += gTotal;
+      const gudangLebihDates = (hasGForProd && selisih < 0) ? ketGudangLebihDates(penjualanPD[prod.key], gudangPD[prod.key]) : [];
+      const selColor = ok ? '#166534' : (selisih > 0 ? '#1d4ed8' : '#dc2626');
 
       rBody += '<tr>' +
         '<td>' + prod.name + '</td>' +
         cells +
         '<td class="num" style="font-weight:800">' + nfQty(rowTotal) + '</td>' +
         '<td class="num">' + (hasGForProd ? nfQty(gTotal) : '—') + '</td>' +
-        '<td class="num" style="color:' + (ok ? '#166534' : '#b42318') + ';font-weight:700">' +
+        '<td class="num" style="color:' + selColor + ';font-weight:700">' +
           (hasGForProd ? ((selisih > 0 ? '+' : '') + nfQty(selisih)) : '—') + '</td>' +
-        '<td>' + (hasGForProd ? ketBadge(ok) : '—') + '</td>' +
+        '<td>' + (hasGForProd ? ketBadge(selisih, gudangLebihDates) : '—') + '</td>' +
       '</tr>';
     });
     tbody.innerHTML = rBody;
@@ -2940,7 +3349,7 @@ self.onmessage = function(e){
 
   function downloadCekRupa(){
     if (!_cekRupaLastData || !_cekRupaLastData.products.length) return alert('Belum ada data untuk diunduh.');
-    const {products, salesList, penjualanPS, gudangPD, hasGudang} = _cekRupaLastData;
+    const {products, salesList, penjualanPS, penjualanPD, gudangPD, hasGudang} = _cekRupaLastData;
     const q = (document.getElementById('cekRupaSearch')?.value || '').trim().toUpperCase();
     let list = products;
     if (_cekRupaFilterKey) list = list.filter(p => p.key === _cekRupaFilterKey);
@@ -2957,7 +3366,8 @@ self.onmessage = function(e){
       grandTotal += rowTotal; grandGudang += gTotal;
       const hasGForProd = hasGudang && Object.keys(gudangPD[prod.key] || {}).length > 0;
       const selisih = rowTotal - gTotal;
-      return [prod.name, ...cells, rowTotal, hasGForProd ? gTotal : '-', hasGForProd ? selisih : '-', hasGForProd ? (selisih===0?'Cocok':'Beda') : '-'];
+      const gudangLebihDates = (hasGForProd && selisih < 0) ? ketGudangLebihDates(penjualanPD[prod.key], gudangPD[prod.key]) : [];
+      return [prod.name, ...cells, rowTotal, hasGForProd ? gTotal : '-', hasGForProd ? selisih : '-', hasGForProd ? ketText(selisih, gudangLebihDates) : '-'];
     });
     const foot = ['TOTAL', ...salesGrand, grandTotal, grandGudang || '-', grandTotal-grandGudang, ''];
     const ws = XLSX.utils.aoa_to_sheet([head, ...rows, foot]);
@@ -3204,7 +3614,7 @@ self.onmessage = function(e){
     // Populate month filter dropdown (keep current selection if still valid)
     const monthSel = document.getElementById('gudangMonth');
     let selMonth = monthSel ? monthSel.value : '';
-    const monthKeys = [...new Set(rows.map(r => monthKey(r.tanggal)).filter(Boolean))].sort().reverse();
+    const monthKeys = [...new Set(rows.map(r => monthKeyUTC(r.tanggal)).filter(Boolean))].sort().reverse();
     if (monthSel){
       monthSel.innerHTML = '<option value="">Semua bulan</option>' +
         monthKeys.map(m => '<option value="' + m + '">' + monthLabel(m) + '</option>').join('');
@@ -3220,7 +3630,7 @@ self.onmessage = function(e){
     }
 
     // Filter rows by selected month
-    const rowsFiltered = selMonth ? rows.filter(r => monthKey(r.tanggal) === selMonth) : rows;
+    const rowsFiltered = selMonth ? rows.filter(r => monthKeyUTC(r.tanggal) === selMonth) : rows;
 
     // Saldo awal untuk ditampilkan: kalau difilter ke satu bulan, pakai stok terakhir
     // sebelum bulan tsb (per produk), bukan saldo awal keseluruhan data.
@@ -3230,7 +3640,7 @@ self.onmessage = function(e){
       products.forEach(p => {
         let last = saldoAwal[p] ?? 0;
         for (let i = 0; i < rows.length; i++){
-          if (monthKey(rows[i].tanggal) === selMonth) break;
+          if (monthKeyUTC(rows[i].tanggal) === selMonth) break;
           if (rows[i].values[p] && rows[i].values[p].stok !== null) last = rows[i].values[p].stok;
         }
         displaySaldoAwal[p] = last;
@@ -3265,7 +3675,7 @@ self.onmessage = function(e){
       '<tr>' + products.map(() => '<th>MASUK</th><th>KELUAR</th><th>STOK SFA</th>').join('') + '</tr>';
 
     // Body
-    let body = '<tr style="background:#eef2fb;font-weight:bold"><td>Saldo Awal</td>' +
+    let body = '<tr class="gudang-saldo-row"><td>Saldo Awal</td>' +
       products.map(p => '<td class="num">-</td><td class="num">-</td><td class="num">' + nfQty(displaySaldoAwal[p]) + '</td>').join('') + '</tr>';
     body += rowsFiltered.map(r => {
       return '<tr><td>' + gudangFmtDate(r.tanggal) + '</td>' + products.map(p => {
@@ -3318,7 +3728,7 @@ self.onmessage = function(e){
     const selMonth = monthSel ? monthSel.value : '';
     let dateStr = todayInputStr();
     if (selMonth && selMonth !== monthKey(new Date())){
-      const rowsInMonth = (gudangData.rows || []).filter(r => monthKey(r.tanggal) === selMonth);
+      const rowsInMonth = (gudangData.rows || []).filter(r => monthKeyUTC(r.tanggal) === selMonth);
       if (rowsInMonth.length) dateStr = utcDateToInputStr(rowsInMonth[rowsInMonth.length - 1].tanggal);
       else { const [y,m] = selMonth.split('-').map(Number); dateStr = y + '-' + String(m).padStart(2,'0') + '-01'; }
     }
@@ -3413,7 +3823,30 @@ self.onmessage = function(e){
     const b = document.getElementById('s0box');
     if (b && document.getElementById('panel_s0').offsetParent !== null) requestAnimationFrame(s0Render);
   });
+  function applyTheme(mode){
+    const dark = mode === 'dark';
+    document.body.classList.toggle('dark', dark);
+    const btn = document.getElementById('themeBtn');
+    if (btn) btn.textContent = dark ? '☀️' : '🌙';
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', dark ? '#1e3a5f' : '#1f4e78');
+    try { localStorage.setItem('rekap-theme', dark ? 'dark' : 'light'); } catch(e){}
+  }
+  function toggleTheme(){
+    applyTheme(document.body.classList.contains('dark') ? 'light' : 'dark');
+  }
+  function initTheme(){
+    let mode = 'light';
+    try {
+      const saved = localStorage.getItem('rekap-theme');
+      if (saved === 'dark' || saved === 'light') mode = saved;
+      else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) mode = 'dark';
+    } catch(e){}
+    applyTheme(mode);
+  }
+
   (async function init(){
+    initTheme();
     initMainTabs();
     await initDB();
     await restoreFromDB();
