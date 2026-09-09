@@ -410,6 +410,7 @@ tfoot td{background:#ffe699;font-weight:bold}
   <div id="result" class="card" style="display:none">
     <div class="tabs">
       <button class="active" onclick="show('s0',this)">Transaksi</button>
+      <button onclick="show('s7',this)">Sales per Produk</button>
       <button onclick="show('s6',this)">Faktur</button>
       <button onclick="show('s1',this)">Produk</button>
       <button onclick="show('s2',this)">Profit Per Pembayaran</button>
@@ -478,6 +479,7 @@ tfoot td{background:#ffe699;font-weight:bold}
         <div class="tablebox" id="s0box"></div>
         <div class="vfootwrap" id="s0footwrap"><table class="vfoot" id="s0foot"></table></div>
       </div>
+      <div id="panel_s7" class="view" style="display:none"></div>
       <div id="panel_s6" class="view" style="display:none"></div>
       <div id="panel_s1" class="view" style="display:none"></div>
       <div id="panel_s2" class="view" style="display:none"></div>
@@ -668,8 +670,16 @@ tfoot td{background:#ffe699;font-weight:bold}
 <script type="text/javascript">
   /* ------------------------- helpers / constants ------------------------- */
   const SO = ['RAJU','HAFID','JOSSY','GC','PARIMIN'];
+  /* Urutan kolom tab Sales per Produk (sesuai template) */
+  const SO_S7 = ['RAJU','JOSSY','HAFID','GC','PARIMIN'];
   const N  = x => Number(x) || 0;
   const U  = x => String(x ?? '').trim().toUpperCase();
+  /* Normalisasi: PRTIMIN di data → PARIMIN */
+  function normSales(s){
+    const u = U(s);
+    if (u === 'PRTIMIN' || u === 'PARIMIN') return 'PARIMIN';
+    return u;
+  }
   const rp = x => 'Rp ' + Math.round(N(x)).toLocaleString('id-ID');
   const range = (a,b) => a === b ? rp(a) : rp(a) + ' - ' + rp(b);
   const ROW_H = 34, OVERSCAN = 6;
@@ -1178,10 +1188,18 @@ self.onmessage = function(e){
     filteredRows = filtr;
     materialise();
     buildCached(materialisedRows);
+    s7DateFilter = '';
+    viewCache = {};
     updateSummary();
     updateFilterUi();
-    const active = document.querySelector('.tabs button.active') || document.querySelector('.tabs button');
-    show('s0', active);
+    const activeBtn = document.querySelector('.tabs button.active') || document.querySelector('.tabs button');
+    let tabId = 's0';
+    if (activeBtn) {
+      const oc = activeBtn.getAttribute('onclick') || '';
+      const m = oc.match(/show\('([^']+)'/);
+      if (m) tabId = m[1];
+    }
+    show(tabId, activeBtn);
     const parts = [
       filters.month   ? monthLabel(filters.month) : '',
       formatFilterDateLabel(filters.dateFrom, filters.dateTo),
@@ -1539,7 +1557,7 @@ self.onmessage = function(e){
       const hb = N(g(x,'Harga Beli','hargaBeli'));
       const hj = N(g(x,'Harga Jual','hargaJual'));
       const pay = U(g(x,'Pembayaran','pembayaran'));
-      const salesName = U(g(x,'Sales','sales'));
+      const salesName = normSales(g(x,'Sales','sales'));
       const sat = String(g(x,'Satuan','satuan') ?? '').trim();
       const nf = String(g(x,'No. Faktur','faktur') ?? '').trim();
       const hLine = j * hb;
@@ -1760,8 +1778,19 @@ self.onmessage = function(e){
       const head=['NO','TANGGAL','NO. FAKTUR','SALES','PRODUK','QTY','SATUAN','HARGA JUAL','DISC','TOTAL','NOMINAL FAKTUR','PROFIT PER FAKTUR','PEMBAYARAN','CUSTOMER'];
       const rows=fRows.map((row,i)=>{const x=row.x;return [i+1,fmtTgl(x.Tanggal),row.faktur,x.Sales||row.sales||'',x.Produk||'',N(x.Jumlah),x.Satuan||'',N(x['Harga Jual']),N(x.Discount),N(x.Total),row.isFirst?row.nominal:'',row.isFirst?row.profit:'',x.Pembayaran||row.bayar||'',x.Customer||row.customer||''];});
       addReportSheet(wb,'Faktur','Rekap per Faktur',head,rows,['TOTAL','','','','',r.qty,'','','',r.sales,r.sales,r.profit,'','']);
+    } else if(tab==='s7'){
+      const pivot=buildS7Pivot(s7DateFilter);
+      const head=['TGL','PRODUK',...SO_S7.map(s=>s==='PARIMIN'?'PRTIMIN':s),'TOTAL QTY'];
+      const rows=pivot.rows.map(r=>[
+        r.isFirst?r.dateLabel:'',
+        r.produk,
+        ...SO_S7.map(s=>r.q[s]||0),
+        r.total
+      ]);
+      const total=['TOTAL','',...SO_S7.map(s=>pivot.grand[s]||0),pivot.grandTotal||0];
+      addReportSheet(wb,'Sales per Produk','Qty Penjualan Per Sales Per Tgl',head,rows,total);
     }
-    const name='Laporan_'+({s0:'Transaksi',s1:'Produk',s2:'Profit_Pembayaran',s3:'Profit_Produk',s4:'Rekap_Sales',s5:'Margin_Produk',s6:'Faktur'}[tab]||'Penjualan')+'.xlsx';
+    const name='Laporan_'+({s0:'Transaksi',s1:'Produk',s2:'Profit_Pembayaran',s3:'Profit_Produk',s4:'Rekap_Sales',s5:'Margin_Produk',s6:'Faktur',s7:'Sales_per_Produk'}[tab]||'Penjualan')+'.xlsx';
     XLSX.writeFile(wb,name);
   }
 
@@ -1944,9 +1973,140 @@ self.onmessage = function(e){
     return arr.slice(start, start + REKAP_PAGE_SIZE);
   }
 
+  /* ------------- Sales per Produk: Qty per Sales per Tanggal ------------- */
+  let s7DateFilter = '';
+
+  function buildS7Pivot(dateFilter){
+    const byDate = new Map();
+    const n = filteredRows.length;
+    for (let i = 0; i < n; i++){
+      const x = getUiRow(i);
+      if (!x) continue;
+      const d = toDate(x.Tanggal ?? x.tanggal);
+      if (!d) continue;
+      const y = d.getFullYear(), m = d.getMonth()+1, day = d.getDate();
+      const key = y + '-' + String(m).padStart(2,'0') + '-' + String(day).padStart(2,'0');
+      if (dateFilter && key !== dateFilter) continue;
+      const produk = String(x.Produk ?? x.produk ?? '').trim() || '(Tanpa Produk)';
+      const qty = N(x.Jumlah ?? x.jumlah);
+      const salesName = normSales(x.Sales ?? x.sales);
+      let g = byDate.get(key);
+      if (!g){
+        g = { ts: new Date(y, m-1, day).getTime(), label: fmtTgl(d), products: new Map() };
+        byDate.set(key, g);
+      }
+      let p = g.products.get(produk);
+      if (!p){
+        p = { q: {}, total: 0 };
+        SO_S7.forEach(s => { p.q[s] = 0; });
+        g.products.set(produk, p);
+      }
+      if (SO_S7.includes(salesName)){
+        p.q[salesName] = (p.q[salesName] || 0) + qty;
+      }
+      p.total += qty;
+    }
+    const dates = [...byDate.entries()].sort((a,b) => a[1].ts - b[1].ts);
+    const rows = [];
+    dates.forEach(([key, g]) => {
+      const prods = [...g.products.entries()].sort((a,b) => a[0].localeCompare(b[0], 'id'));
+      prods.forEach(([produk, p], idx) => {
+        rows.push({
+          dateKey: key,
+          dateLabel: g.label,
+          isFirst: idx === 0,
+          span: prods.length,
+          produk,
+          q: p.q,
+          total: p.total
+        });
+      });
+    });
+    const grand = {};
+    SO_S7.forEach(s => { grand[s] = 0; });
+    let grandTotal = 0;
+    rows.forEach(r => {
+      SO_S7.forEach(s => { grand[s] += (r.q[s] || 0); });
+      grandTotal += r.total;
+    });
+    return { rows, grand, grandTotal };
+  }
+
+  function s7DateOptionsHtml(){
+    const set = new Set();
+    const n = filteredRows.length;
+    for (let i = 0; i < n; i++){
+      const x = getUiRow(i);
+      if (!x) continue;
+      const d = toDate(x.Tanggal ?? x.tanggal);
+      if (!d) continue;
+      const key = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+      set.add(key);
+    }
+    const keys = [...set].sort();
+    return '<option value="">Semua tanggal</option>' +
+      keys.map(k => {
+        const [y,m,dd] = k.split('-').map(Number);
+        const label = new Date(y, m-1, dd).toLocaleDateString('id-ID');
+        return '<option value="' + k + '"' + (s7DateFilter === k ? ' selected' : '') + '>' + label + '</option>';
+      }).join('');
+  }
+
+  function setS7DateFilter(val){
+    s7DateFilter = val || '';
+    viewCache['s7'] = null;
+    const btn = document.querySelector('.tabs button.active');
+    show('s7', btn);
+  }
+
+  function renderS7(){
+    const pivot = buildS7Pivot(s7DateFilter);
+    const head = ['TGL','PRODUK', ...SO_S7.map(s => s === 'PARIMIN' ? 'PRTIMIN' : s), 'TOTAL QTY'];
+    let body = '';
+    if (!pivot.rows.length){
+      body = '<tr><td colspan="' + head.length + '" style="text-align:center;padding:28px;color:#64748b">Tidak ada data untuk filter saat ini.</td></tr>';
+    } else {
+      pivot.rows.forEach(r => {
+        body += '<tr>';
+        if (r.isFirst){
+          body += '<td rowspan="' + r.span + '" style="vertical-align:top;font-weight:600;white-space:nowrap">' + r.dateLabel + '</td>';
+        }
+        body += '<td>' + r.produk + '</td>';
+        SO_S7.forEach(s => {
+          const v = r.q[s] || 0;
+          body += '<td class="num">' + (v ? v.toLocaleString('id-ID') : '') + '</td>';
+        });
+        body += '<td class="num" style="font-weight:700">' + (r.total ? r.total.toLocaleString('id-ID') : '') + '</td>';
+        body += '</tr>';
+      });
+    }
+    const foot = '<tr><td class="num" colspan="2">TOTAL</td>' +
+      SO_S7.map(s => '<td class="num">' + (pivot.grand[s] ? pivot.grand[s].toLocaleString('id-ID') : '0') + '</td>').join('') +
+      '<td class="num">' + (pivot.grandTotal ? pivot.grandTotal.toLocaleString('id-ID') : '0') + '</td></tr>';
+
+    const filterBar =
+      '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 10px;padding:8px 10px;background:#f8fafc;border:1px solid #dbe3ea;border-radius:7px">' +
+        '<div style="font-size:13px;color:#1f4e78;font-weight:700">Qty Penjualan Per Sales Per Tgl</div>' +
+        '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">' +
+          '<label style="font-size:11px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.04em">Filter tgl</label>' +
+          '<select id="s7DateFilter" onchange="setS7DateFilter(this.value)" style="padding:6px 10px;border:1px solid #cbd5e1;border-radius:6px;font-size:12px;background:#fff;min-width:140px">' +
+            s7DateOptionsHtml() +
+          '</select>' +
+          '<button type="button" onclick="saveExcelTab(\'s7\')" style="padding:7px 12px;border:1px solid #b8c4d1;border-radius:6px;background:#fff;color:#1f2937;font-size:12px;font-weight:700;cursor:pointer">💾 Simpan Excel</button>' +
+        '</div>' +
+      '</div>';
+
+    return filterBar +
+      '<div class="tablebox"><table><thead><tr>' +
+      head.map(h => '<th>' + h + '</th>').join('') +
+      '</tr></thead><tbody>' + body + '</tbody><tfoot>' + foot + '</tfoot></table></div>';
+  }
+
   function renderTab(t){
     const SO2 = R.SO2 || SO;
-    if (t === 's1'){
+    if (t === 's7'){
+      return renderS7();
+    } else if (t === 's1'){
       const n = SO2.length;
       const h = ['PRODUK', ...SO2, 'TOTAL QTY','SATUAN','HARGA BELI','HARGA JUAL','BELI X QTY','JUAL X QTY','PROFIT'];
       const pageRows = sliceRekap('s1', R.s1 || []);
